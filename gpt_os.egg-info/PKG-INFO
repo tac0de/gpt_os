@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: gpt-os
+Version: 0.1.0
+Summary: A modular operating system simulation for LLMs (GPT OS)
+Author: YourNameHere
+Keywords: gpt os architecture ai memory llm shell
+Classifier: Programming Language :: Python :: 3
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Artificial Intelligence

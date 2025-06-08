@@ -1,0 +1,2 @@
+[console_scripts]
+gpt-os = system.__main__:main
