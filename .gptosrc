@@ -1,0 +1,12 @@
+{
+    "autoload_log": "logs.json",
+    "startup_memory": {
+        "user": "wonyoung",
+        "project": "GPT OS"
+    },
+    "autocommands": [
+        "version",
+        "remember lang Python",
+        "remember goal Build a real OS"
+    ]
+}

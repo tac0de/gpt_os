@@ -1,56 +1,37 @@
-# gpt_os/core/memory_core.py
-import json
-import os
+# core/memory_core.py
 
 class MemoryCore:
-    def __init__(self, storage_path="core/memory.json"):
-        self.memory_slots = {}
-        self.storage_path = storage_path
-        self.load()
+    """
+    Stores and retrieves memory in a simple key-value store.
+    """
+    def __init__(self):
+        self.memory = {}
 
-    def remember(self, key, value):
-        """
-        Store a value under a specific key in memory.
-        """
-        self.memory_slots[key] = value
-        self.save()
-        return f"Memory stored: [{key}] → {value}"
+    def remember(self, key: str, value: str):
+        self.memory[key] = value
 
-    def recall(self, key):
-        """
-        Retrieve a value stored under a key.
-        """
-        return self.memory_slots.get(key, f"No memory found for '{key}'.")
+    def query(self, key: str) -> str:
+        return self.memory.get(key, "[NOT FOUND]")
 
-    def forget(self, key):
-        """
-        Delete a specific memory slot.
-        """
-        if key in self.memory_slots:
-            del self.memory_slots[key]
-            self.save()
-            return f"Memory for '{key}' has been deleted."
-        return f"No memory found for '{key}'."
+    def reset(self):
+        self.memory.clear()
+        print("[MEMORY] Memory reset")
 
-    def list_memory(self):
-        """
-        List all current memory entries.
-        """
-        if not self.memory_slots:
-            return "No memories stored."
-        return "\n".join([f"- {k}: {v}" for k, v in self.memory_slots.items()])
-    def save(self):
-        try:
-            with open(self.storage_path, "w", encoding="utf-8") as f:
-                json.dump(self.memory, f, indent=2)
-        except Exception as e:
-            return f"Error saving memory: {e}"
-    def load(self):
-        if os.path.exists(self.storage_path):
-            try:
-                with open(self.storage_path, "r", encoding="utf-8") as f:
-                    self.memory = json.load(f)
-            except Exception:
-                self.memory = {}
+    def get_all(self) -> dict:
+        return self.memory.copy()
+    
+    def delete(self, key: str) -> bool:
+        if key in self.memory:
+            del self.memory[key]
+            return True
+        return False
+    def list_keys(self) -> list:
+        return list(self.memory.keys())
+    
+    def summarize(self) -> str:
+        if not self.memory:
+            return "No memory stored."
+        return "\n".join(f"{key} → {value}" for key, value in self.memory.items())
+
 
 

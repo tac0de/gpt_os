@@ -1,140 +1,80 @@
-# GPT OS
+# GPT OS 🧠 — A Simulated Operating System for LLMs
 
-GPT OS is a modular, memory-simulating, philosophically-aware operating system built entirely in Python.
-It is designed to simulate how an LLM (like ChatGPT) could operate with structural memory, command routing, and logical reflection in an extensible system.
+> 🚨 Internal Development Repository (Built in Python)
 
----
-
-## 🚀 Features
-
-- 🧠 **Modular Core System**: Command, Text, Memory, Image, Philosophy, and Code cores
-- 🔒 **Lockable Workflow**: Modules are locked into memory using `~apply` commands
-- 💾 **Simulated Memory Engine**: Includes `remember`, `recall`, `forget`, and `list-memory`
-- 🎨 **Image Recommendation Engine**: Prompts and image generation commands available
-- 📜 **Philosophical Reflection Core**: Reflects on existential and logical questions
-- 💻 **Dynamic Code Evaluation**: Evaluate or execute Python code blocks safely
-- 🪵 **Logging & Debugging**: Workflow logger, debug tools, and structured introspection
+This project is a conceptual prototype of an operating system designed to interface with large language models (LLMs) like GPT. Unlike traditional chatbot wrappers, GPT OS treats LLMs as programmable, state-aware agents capable of responding to system-level commands and managing internal memory through structured interfaces.
 
 ---
 
-## 📁 Folder Structure
+## 📏 Project Overview
 
-```
-gpt_os/
-├── core/               # Core modules (command, memory, text, image, philosophy, code)
-├── system/             # Execution entrypoint, logger, state manager, debug tools
-├── interface/          # Input/output adapter
-├── commands/           # Registration and API test modules
-├── docs/               # Documentation files
-└── tests/              # Unit tests (TBD)
-```
+GPT OS is an experiment in turning an LLM into a structured computation environment. It consists of modular components (“cores”) that mirror the responsibilities of a traditional OS: memory management, command parsing, state control, and output handling.
+
+### Core Modules
+
+| Module                           | Description                                                          |
+| -------------------------------- | -------------------------------------------------------------------- |
+| `Command Core`                   | Parses natural language instructions into structured command objects |
+| `Memory Core`                    | Stores, retrieves, and resets persistent memory                      |
+| `OS Manager`                     | Central hub for coordinating core behaviors and system routing       |
+| *(Planned)* `Text Core`          | Manages output formatting, journaling, and logs                      |
+| *(Planned)* `Image Core`         | Placeholder for render simulation                                    |
+| *(Planned)* `Philosophical Core` | Handles abstract reasoning and ethical feedback loops                |
 
 ---
 
-## 🔧 Installation
+## 🚀 Quickstart
 
-> ⚠️ Not a package yet — clone and run locally
+### Requirements
+
+* Python 3.10+
 
 ```bash
-git clone https://github.com/your-username/gpt-os.git
-cd gpt-os
-python system/index.py
+# Clone and run
+cd gpt_os
+python ui/console.py
 ```
 
----
-
-## 🧪 Usage
-
-When the shell starts, you can enter commands like:
+### Available Commands
 
 ```bash
-remember goal innovate
-recall goal
-generate-image fantasy castle
-reflect what is truth
-evaluate 3 * (4 + 2)
-help
-debug
+remember key "value"     # Store a value under a key
+query key                # Retrieve a value by key
+reset                    # Clear all stored memory
+log                      # Print current memory state
 ```
 
 ---
 
-## 🧠 Command List (via `help`)
+## 🧱 Architectural Philosophy
 
-Command categories include:
+GPT OS reimagines LLMs as deterministic agents under system-level control. The OS metaphor enables modular scaling, command chaining, and eventual simulation of multi-agent GPT instances, each with their own context-aware cores.
 
-- **System**: `help`, `apply`, `report`, `whoami`
-- **Memory**: `remember`, `recall`, `forget`, `list-memory`
-- **Text**: `parse`
-- **Image**: `generate-image`, `recommend-prompt`
-- **Philosophy**: `reflect`, `meta-infer`
-- **Code**: `evaluate`, `execute`
-
-You can call `help` at any time to list all available commands with descriptions.
+All functionality is designed to be testable, extensible, and decoupled from actual API inference (simulated calls only).
 
 ---
 
-## 📜 Philosophy
+## 📊 Roadmap
 
-GPT OS is not an operating system in the traditional sense.
-It is a conceptual shell and protocol stack layered over a stateless language model — one that simulates persistence, logic, visual reasoning, and even self-reflection.
-
-By integrating philosophical modules and memory structures, GPT OS aims to explore:
-
-- Can a GPT simulate continuity of thought?
-- Can memory be faked through enforced structure?
-- Can we layer logical reasoning and self-inspection over a prediction engine?
-
-This system is both a **tool** and a **thought experiment**.
-
----
-
-## 📌 Project Status
-
-| Component         | Status   |
-|------------------|----------|
-| Core Modules      | ✅ Complete (6/6) |
-| Command Registry  | ✅ Working |
-| Help System       | ✅ Context-aware |
-| Debug Tools       | ✅ Operational |
-| CLI Interface     | ✅ Stable |
-| Documentation     | 🟡 In progress |
-| Tests             | ⏳ Planned |
-| Persistence       | ⏳ Planned |
-| Plugin System     | ⏳ Experimental |
+* [x] Command parsing engine
+* [x] Memory storage and query
+* [x] CLI interface via `console.py`
+* [x] OS-level execution routing
+* [ ] Test suite (unit testing per core)
+* [ ] Simulated GPT API endpoints
+* [ ] Logging and text journaling core
+* [ ] Render-capable image core (stub)
+* [ ] Ethical/philosophical reasoning simulation
 
 ---
 
-## 🔭 Roadmap
+## 🔗 License & Confidentiality
 
-- [ ] Convert to installable CLI package (`setup.py`, `__main__.py`)
-- [ ] Add persistent memory/log state (JSON or SQLite)
-- [ ] Auto-register plugins via decorators
-- [ ] Add web/REST interface (optional)
-- [ ] Flesh out `tests/` directory with unit and integration tests
-- [ ] Publish to PyPI (maybe...)
+This is a private development repository for experimental purposes. All code, concepts, and system architecture are original and intended for research, demonstration, or interview usage only.
 
 ---
 
-## 👨‍💻 Author
+## 💡 Contact
 
-**@Wonyoung Choi tac0de**
-Creator of GPT OS — built from scratch through iterative design in GPT.
-Interested in LLM operating systems, protocol architectures, and machine consciousness simulation.
-
----
-
-## 🧠 Final Thoughts
-
-> “A GPT without structure is a conversation.
-> A GPT with structure is an operating system.”
-
----
-
-## 📬 Contact
-
-For questions, collaboration, or showcasing this work:
-📧 wonyoungchoiseoul@gmail.com
-🔗 [LinkedIn/GitHub/Portfolio link]
-
----
+Created and maintained by **Wonyoung Choi**.
+For inquiries, please contact via GitHub or directly.

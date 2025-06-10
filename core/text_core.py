@@ -1,38 +1,58 @@
-# gpt_os/core/text_core.py
+# core/text_core.py
+
+from datetime import datetime
+import json
 
 class TextCore:
+    """
+    Handles output formatting and basic session logging.
+    """
+
     def __init__(self):
-        # 향후 명령어 추론 패턴 등 확장 가능
-        self.simple_aliases = {
-            "시작해줘": "run",
-            "적용해줘": "apply",
-            "상태 보여줘": "report",
-            "헬프": "help"
-        }
+        self.log_history = []
 
-    def alias_replace(self, input_text):
-        """
-        간단한 alias 기반의 명령어 변환
-        예: "command_core 적용해줘" → "apply command_core"
-        """
-        for alias, true_cmd in self.simple_aliases.items():
-            if alias in input_text:
-                input_text = input_text.replace(alias, true_cmd)
-        return input_text.strip()
+    def format_output(self, label: str, content: str) -> str:
+        return f"[{label.upper()}]\n{content}"
 
-    def parse(self, raw_input):
-        normalized = self.alias_replace(raw_input)
-        parts = normalized.strip().split()
-        if not parts:
-            return {"command": "", "args": []}
-        return {"command": parts[0], "args": parts[1:]}
+    def format_kv(self, key: str, value: str) -> str:
+        return f"{key} → {value}"
 
-    def extract_command_keywords(self, input_text):
-        """
-        입력된 텍스트에서 의미 있는 명령어 토큰 추출
-        예: "apply command_core please" → ("apply", ["command_core", "please"])
-        """
-        parts = input_text.strip().split()
-        if not parts:
-            return None, []
-        return parts[0], parts[1:]
+    def log_event(self, command: str, result: str):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        entry = f"{timestamp} | {command} => {result}"
+        self.log_history.append(entry)
+
+    def print_log(self):
+        print("[SESSION LOG]")
+        for entry in self.log_history:
+            print(" ", entry)
+
+    def clear_log(self):
+        self.log_history.clear()
+    
+    def export_log(self) -> str:
+        structured_logs = []
+        for entry in self.log_history:
+            try:
+                parts = entry.split(" | ", 1)
+                timestamp = parts[0]
+                rest = parts[1].split(" => ")
+                command = rest[0]
+                output = rest[1] if len(rest) > 1 else ""
+                structured_logs.append({
+                    "timestamp": timestamp,
+                    "command": command,
+                    "output": output
+                })
+            except Exception:
+                continue  # skip malformed entries
+        return json.dumps(structured_logs, indent=2)
+    def save_log_to_file(self, filename: str = "logs.json") -> str:
+        try:
+            json_data = self.export_log()
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(json_data)
+            return f"Log successfully saved to {filename}"
+        except Exception as e:
+            return f"Failed to save log: {str(e)}"
+
