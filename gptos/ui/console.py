@@ -1,26 +1,19 @@
-import asyncio
-from gptos.system.os_manager import OSManager
+from gptos.core.command_core.parser import parse_command
+from gptos.core.command_core.executor import execute
+from gptos.system.context_handler import SystemContext
+from gptos.plugins.reload_plugin import load_plugins
 
-def start_console():
-    try:
-        os = OSManager()
-        print("🧠 GPT OS console started. Type 'help' or 'exit'.")
-        while True:
-            try:
-                line = input(os.prompt)
-                if line.strip():
-                    command = os.command.parse(os.alias.resolve(line))
-                    print(f"DEBUG: Command resolved: {command}")  # 명령어 확인
-                    result = os.route_command(command, line)  # 실제 명령어 실행
-                    print(f"DEBUG: Command result: {result}")  # 명령어 처리 결과
-                    if result:
-                        print(result)  # 정상적으로 출력하는 부분
-            except KeyboardInterrupt:
-                break
-    except Exception as e:
-        print(f"[ERROR] Failed to start console: {e}")
+def main():
+    context = SystemContext()
+    load_plugins()
+    while True:
+        raw_input_cmd = input(">>> ")
+        if raw_input_cmd.strip() in ["exit", "quit"]:
+            print("Shutting down GPT OS.")
+            break
+        command = parse_command(raw_input_cmd, context)
+        context.log(command)
+        execute(command, context)
 
-
-
-
-
+if __name__ == "__main__":
+    main()

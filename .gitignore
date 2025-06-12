@@ -1,1 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
 *.egg-info/
+
+# Installer logs
+pip-log.txt
+
+# Environment
+.env
+.venv
+env/
+venv/
+
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+logs.json
+logfile.json
+
+# Test files or temp dumps
+test_output/

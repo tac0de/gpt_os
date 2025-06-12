@@ -1,30 +1,29 @@
+import importlib
+import gptos.plugins as plugins
+import sys
 import os
-import importlib.util
-import inspect
 
-class PluginLoader:
-    def __init__(self, plugin_dir):
-        self.plugin_dir = os.path.abspath(plugin_dir)
-        self.commands = {}
-        self.load_plugins()
+PLUGIN_REGISTRY = {}
 
-    def load_plugins(self):
-        if not os.path.isdir(self.plugin_dir):
-            print(f"[DEBUG] Plugin path: {self.plugin_dir}, exists: False")
-            return
-        for file in os.listdir(self.plugin_dir):
-            if file.endswith(".py") and not file.startswith("__"):
-                path = os.path.join(self.plugin_dir, file)
-                name = os.path.splitext(file)[0]
-                spec = importlib.util.spec_from_file_location(name, path)
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)
-                if hasattr(mod, "get_commands"):
-                    self.commands.update(mod.get_commands())
+def load_plugins():
+    global PLUGIN_REGISTRY
+    PLUGIN_REGISTRY.clear()
 
-    def resolve(self, cmd):
-        return self.commands.get(cmd)
+    plugin_dir = os.path.dirname(plugins.__file__)
 
-    def is_async(self, cmd):
-        func = self.commands.get(cmd)
-        return inspect.iscoroutinefunction(func)
+    for filename in os.listdir(plugin_dir):
+        if filename.endswith("_plugin.py"):
+            module_name = filename[:-3]  # remove .py
+            module_path = f"{plugins.__name__}.{module_name}"
+            try:
+                if module_path in sys.modules:
+                    importlib.reload(sys.modules[module_path])
+                else:
+                    importlib.import_module(module_path)
+                mod = sys.modules[module_path]
+                if hasattr(mod, "PLUGIN_REGISTRY"):
+                    PLUGIN_REGISTRY.update(mod.PLUGIN_REGISTRY)
+                else:
+                    print(f"[SKIPPED] {module_name} has no PLUGIN_REGISTRY")
+            except Exception as e:
+                print(f"[ERROR] Failed to load {module_name}: {e}")

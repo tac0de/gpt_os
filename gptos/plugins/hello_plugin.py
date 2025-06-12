@@ -1,8 +1,11 @@
-def get_commands():
-    return {
-        "hello": say_hello
-    }
+from gptos.plugins.base import GPTOSPlugin
 
-def say_hello(*args):
-    name = args[0] if args else "world"
-    return f"Hello, {name}!"
+class HelloPlugin(GPTOSPlugin):
+    def register(self, context): pass
+
+    def execute(self, command, context):
+        print("Hello, GPT OS!")
+
+PLUGIN_REGISTRY = {
+    "hello": HelloPlugin()
+}
