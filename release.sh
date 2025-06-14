@@ -40,18 +40,26 @@ fi
 # 📜 Auto-fill CHANGELOG.md using filtered git log
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
 if [ -z "$LAST_TAG" ]; then
-  COMMIT_LOG=$(git log --oneline --grep="^feat\|^fix\|^docs\|^refactor\|^chore(release)")
+  COMMIT_LOG=$(git log --oneline)
 else
-  COMMIT_LOG=$(git log --oneline --grep="^feat\|^fix\|^docs\|^refactor\|^chore(release)" "$LAST_TAG"..HEAD)
+  COMMIT_LOG=$(git log --oneline "$LAST_TAG"..HEAD)
 fi
 
-CHANGELOG_ENTRY="\n## [v$VERSION] - $(date +%Y-%m-%d)\n### Changes"
-while read -r line; do
-  CHANGELOG_ENTRY+="\n- ${line#* }"
-done <<< "$COMMIT_LOG"
+# 🧹 Filter meaningful commit messages
+FILTERED_LOG=$(echo "$COMMIT_LOG" | grep -vE 'jekyll|gh-pages|workflow|LICENSE|README|generate_readme')
 
-echo "📝 Updating CHANGELOG.md"
-echo -e "$CHANGELOG_ENTRY" >> CHANGELOG.md
+if [ -n "$FILTERED_LOG" ]; then
+  echo "📝 Updating CHANGELOG.md"
+
+  # Remove any pre-existing duplicate for this version
+  sed -i '' "/## \[v$VERSION\]/,/^## /d" CHANGELOG.md
+
+  CHANGELOG_ENTRY=$'\n'"## [v$VERSION] - $(date +%Y-%m-%d)"$'\n'"### Changes"$'\n'"$FILTERED_LOG"$'\n'
+
+  echo "$CHANGELOG_ENTRY" >> CHANGELOG.md
+else
+  echo "⚠️ No significant changes to log for v$VERSION"
+fi
 
 # 💡 Dry run output
 if [ "$DRY_RUN" = true ]; then
