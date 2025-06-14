@@ -1,32 +1,34 @@
-# Byte-compiled / optimized / DLL files
+# 🧠 GPT OS Runtime & Logs
+.gptos/
 __pycache__/
-*.py[cod]
-*$py.class
+*.log
+*.tmp
 
-# Distribution / packaging
+# 🔧 Python Build/Dist
 build/
 dist/
 *.egg-info/
 
-# Installer logs
-pip-log.txt
-
-# Environment
+# 📦 Virtualenv
 .env
 .venv
 env/
 venv/
+pip-wheel-metadata/
 
-# macOS
+# 💡 IDE/Editor Stuff
+.vscode/
+.idea/
+*.swp
 .DS_Store
 
-# VSCode
-.vscode/
+# 🔍 Testing Cache
+.coverage
+.pytest_cache/
 
-# Logs
-*.log
-logs.json
-logfile.json
+# 💾 Command history (if using IPython or custom shells)
+.history
+.ipynb_checkpoints/
 
-# Test files or temp dumps
-test_output/
+# 🌐 OS-specific
+Thumbs.db
