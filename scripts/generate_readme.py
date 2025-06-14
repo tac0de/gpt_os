@@ -12,37 +12,46 @@ def get_plugins():
     ])
 
 def read_version():
-    with open("setup.cfg") as f:
-        for line in f:
-            if line.startswith("version ="):
-                return line.split("=")[-1].strip()
-    return "0.0.0"
+    try:
+        with open("setup.cfg") as f:
+            for line in f:
+                if line.startswith("version ="):
+                    return line.split("=")[-1].strip()
+    except:
+        return "0.0.0"
 
 def generate_readme():
     plugins = get_plugins()
     version = read_version()
     date = datetime.today().strftime("%Y-%m-%d")
 
-    print(f"# GPT OS\n")
-    print(f"🧠 Modular command interface powered by plugins and prompt-driven code generation.\n")
-    print(f"**Version**: `{version}`  **Last Updated**: {date}")
-    print("\n---\n")
+    readme = f"""# 🧠 GPT OS
 
-    print("## 🔌 Available Plugins")
+Modular command interface powered by plugins and prompt-driven code generation.  
+**Version**: `{version}`  **Last Updated**: {date}
+
+---
+
+## 🔌 Available Plugins
+
+"""
     for p in plugins:
-        print(f"- `{p}`")
+        readme += f"- `{p}`\n"
 
-    print("\n---\n")
-    print("## 🧰 Getting Started")
-    print("```bash")
-    print("git clone https://github.com/tac0de/gpt_os.git")
-    print("cd gpt_os")
-    print("pip install -e .")
-    print("gptos")
-    print("```")
+    readme += """
 
-    print("\n## 📄 License")
-    print("MIT License. See [LICENSE](LICENSE).\n")
+---
+
+## 🧰 Getting Started
+
+```bash
+git clone https://github.com/tac0de/gpt_os.git
+cd gpt_os
+pip install -e .
+gptos
+📄 License
+MIT License. See LICENSE.
+"""
 
 if __name__ == "__main__":
     try:
