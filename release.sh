@@ -45,21 +45,23 @@ else
   COMMIT_LOG=$(git log --oneline "$LAST_TAG"..HEAD)
 fi
 
-# 🧹 Filter meaningful commit messages
-FILTERED_LOG=$(echo "$COMMIT_LOG" | grep -vE 'jekyll|gh-pages|workflow|README|LICENSE' | grep -vE '^\s*[-]*\s*$')
+# 🧹 Filter truly irrelevant commits (but be conservative!)
+FILTERED_LOG=$(echo "$COMMIT_LOG" | grep -vE '\b(jekyll|gh-pages|generate_readme|LICENSE)\b')
 
-if [ -n "$FILTERED_LOG" ]; then
+# ❌ Skip changelog if log is empty
+if [ -z "$FILTERED_LOG" ]; then
+  echo "⚠️ No meaningful changes found for changelog. Skipping update."
+else
   echo "📝 Updating CHANGELOG.md"
 
-  # Remove any pre-existing block for this version
+  # Remove any previous block for this version
   sed -i '' "/## \[v$VERSION\]/,/^## \[/d" CHANGELOG.md
 
   CHANGELOG_ENTRY=$'\n'"## [v$VERSION] - $(date +%Y-%m-%d)"$'\n'"### Changes"$'\n'"$FILTERED_LOG"$'\n'
 
   echo "$CHANGELOG_ENTRY" >> CHANGELOG.md
-else
-  echo "⚠️ No meaningful changes to record. Skipping CHANGELOG.md update."
 fi
+
 
 
 # 💡 Dry run output
