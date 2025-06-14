@@ -33,3 +33,8 @@ db87235 chore: release v0.2
 5547168 Delete .github/workflows directory
 9508f00 Create jekyll-gh-pages.yml
 
+
+## [v0.2] - 2025-06-14
+### Changes
+
+
