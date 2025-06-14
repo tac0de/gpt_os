@@ -43,3 +43,7 @@ db87235 chore: release v0.2
 ### Changes
 
 
+
+## [v0.2] - 2025-06-14
+### Changes
+- 

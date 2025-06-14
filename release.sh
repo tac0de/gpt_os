@@ -37,22 +37,18 @@ if [ -f setup.cfg ]; then
   sed -i '' "s/^version = .*/version = $VERSION/" setup.cfg
 fi
 
-# 🗂️ Ensure .gptos folder exists with log
-mkdir -p .gptos
-if [ ! -f .gptos/command_log.json ]; then
-  echo "[]" > .gptos/command_log.json
-  echo "📁 Initialized .gptos/command_log.json"
-fi
-
-# 📜 Auto-fill CHANGELOG.md using git log
+# 📜 Auto-fill CHANGELOG.md using filtered git log
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
 if [ -z "$LAST_TAG" ]; then
-  COMMIT_LOG=$(git log --oneline)
+  COMMIT_LOG=$(git log --oneline --grep="^feat\|^fix\|^docs\|^refactor\|^chore(release)")
 else
-  COMMIT_LOG=$(git log --oneline "$LAST_TAG"..HEAD)
+  COMMIT_LOG=$(git log --oneline --grep="^feat\|^fix\|^docs\|^refactor\|^chore(release)" "$LAST_TAG"..HEAD)
 fi
 
-CHANGELOG_ENTRY="\n## [v$VERSION] - $(date +%Y-%m-%d)\n### Changes\n$COMMIT_LOG\n"
+CHANGELOG_ENTRY="\n## [v$VERSION] - $(date +%Y-%m-%d)\n### Changes"
+while read -r line; do
+  CHANGELOG_ENTRY+="\n- ${line#* }"
+done <<< "$COMMIT_LOG"
 
 echo "📝 Updating CHANGELOG.md"
 echo -e "$CHANGELOG_ENTRY" >> CHANGELOG.md
@@ -68,10 +64,9 @@ python3 scripts/generate_readme.py > README.md
 
 # ✅ Commit + Tag + Push
 git add .
-git commit -m "chore: release v$VERSION"
+git commit -m "chore(release): v$VERSION"
 git tag -f v$VERSION -m "Release GPT OS v$VERSION"
 git push origin main
 git push --force origin v$VERSION
 
 echo "✅ Released GPT OS v$VERSION"
-
