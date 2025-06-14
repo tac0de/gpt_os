@@ -29,24 +29,3 @@ All notable changes to this project will be documented in this file.
 ### Changes
 db87235 chore: release v0.2
 4c7674c chore: finalize GPT OS v0.2 with logging and replay
-5547168 Delete .github/workflows directory
-9508f00 Create jekyll-gh-pages.yml
-
-
-## [v0.2] - 2025-06-14
-### Changes
-
-## [v0.2] - 2025-06-14
-### Changes
-
-## [v0.2] - 2025-06-14
-### Changes
-
-
-## [v0.2] - 2025-06-14
-### Changes
-- 
-
-## [v0.2] - 2025-06-14
-### Changes
-- 
