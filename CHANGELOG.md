@@ -25,7 +25,6 @@ All notable changes to this project will be documented in this file.
 - Bug where command logging failed due to missing `raw_input`
 - Unified `CommandLogger` to singleton instance
 
-
 ## [v0.2] - 2025-06-14
 ### Changes
 db87235 chore: release v0.2
@@ -37,12 +36,8 @@ db87235 chore: release v0.2
 ## [v0.2] - 2025-06-14
 ### Changes
 
-
-
 ## [v0.2] - 2025-06-14
 ### Changes
-
-
 
 ## [v0.2] - 2025-06-14
 ### Changes
