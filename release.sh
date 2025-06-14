@@ -37,7 +37,7 @@ if [ -f setup.cfg ]; then
   sed -i '' "s/^version = .*/version = $VERSION/" setup.cfg
 fi
 
-# 📜 Auto-fill CHANGELOG.md using filtered git log
+# 📜 Auto-fill CHANGELOG.md using git log
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
 if [ -z "$LAST_TAG" ]; then
   COMMIT_LOG=$(git log --oneline)
@@ -46,20 +46,21 @@ else
 fi
 
 # 🧹 Filter meaningful commit messages
-FILTERED_LOG=$(echo "$COMMIT_LOG" | grep -vE 'jekyll|gh-pages|workflow|LICENSE|README|generate_readme')
+FILTERED_LOG=$(echo "$COMMIT_LOG" | grep -vE 'jekyll|gh-pages|workflow|README|LICENSE' | grep -vE '^\s*[-]*\s*$')
 
 if [ -n "$FILTERED_LOG" ]; then
   echo "📝 Updating CHANGELOG.md"
 
-  # Remove any pre-existing duplicate for this version
-  sed -i '' "/## \[v$VERSION\]/,/^## /d" CHANGELOG.md
+  # Remove any pre-existing block for this version
+  sed -i '' "/## \[v$VERSION\]/,/^## \[/d" CHANGELOG.md
 
   CHANGELOG_ENTRY=$'\n'"## [v$VERSION] - $(date +%Y-%m-%d)"$'\n'"### Changes"$'\n'"$FILTERED_LOG"$'\n'
 
   echo "$CHANGELOG_ENTRY" >> CHANGELOG.md
 else
-  echo "⚠️ No significant changes to log for v$VERSION"
+  echo "⚠️ No meaningful changes to record. Skipping CHANGELOG.md update."
 fi
+
 
 # 💡 Dry run output
 if [ "$DRY_RUN" = true ]; then
