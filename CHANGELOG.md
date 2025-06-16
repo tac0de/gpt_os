@@ -33,3 +33,8 @@ db87235 chore: release v0.2
 ### Changes
 ffadf57 feat: finalize v0.3 ethics integration
 
+
+## [v0.4] - 2025-06-16
+### Changes
+6cafc99 chore(release): Prepare and finalize GPT OS v0.4 release
+
