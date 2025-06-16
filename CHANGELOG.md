@@ -27,7 +27,12 @@ All notable changes to this project will be documented in this file.
 - Ethics integration finalized with strict mode support
 
 
+
 ## [v0.4] - 2025-06-16
 ### Changes
-- - Alias system enhanced with multi-token resolution and persistent storage - Memory plugin refactored with indexing and deduplication features - Summarizer plugin added for recent command summaries - Command logging improved with search, replay, and filters - Setup.cfg and release script updates for versioning and changelog automation
+- - Alias system enhanced with multi-token resolution and persistent storage
+- Memory plugin refactored with indexing and deduplication features
+- Summarizer plugin added for recent command summaries
+- Command logging improved with search, replay, and filters
+- Setup.cfg and release script updates for versioning and changelog automation
 
