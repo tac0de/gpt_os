@@ -49,19 +49,17 @@ if [ -z "$COMMIT_LOG" ]; then
   COMMIT_LOG="- No significant changes"
 fi
 
-# 📝 Update CHANGELOG.md
+# CHANGELOG update
 if [ "$DRY_RUN" = false ]; then
   echo "📝 Updating CHANGELOG.md"
 
-  # Remove existing section for this version
+  # delete existing section for this version
   sed -i '' "/## \[v$VERSION\]/,/^## /d" CHANGELOG.md
 
-  # Append with preserved line breaks using printf
   printf "\n## [v%s] - %s\n### Changes\n%s\n\n" "$VERSION" "$(date +%Y-%m-%d)" "$COMMIT_LOG" >> CHANGELOG.md
 else
   echo "🧪 Dry run complete. No changes made."
 fi
-
 
 echo "📄 Updating README.md..."
 python3 scripts/generate_readme.py > README.md
