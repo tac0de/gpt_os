@@ -37,34 +37,41 @@ if [ -f setup.cfg ]; then
   sed -i '' "s/^version = .*/version = $VERSION/" setup.cfg
 fi
 
-# 📜 Get all commit messages since last tag
+# 📜 Get commit messages since last tag with separator
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
 if [ -z "$LAST_TAG" ]; then
-  COMMIT_LOG=$(git log --pretty=format:"- %s")
+  RAW_LOG=$(git log --pretty=format:"==END==%n%B")
 else
-  COMMIT_LOG=$(git log --pretty=format:"- %s" "$LAST_TAG"..HEAD)
+  RAW_LOG=$(git log --pretty=format:"==END==%n%B" "$LAST_TAG"..HEAD)
 fi
 
-if [ -z "$COMMIT_LOG" ]; then
+if [ -z "$RAW_LOG" ]; then
   COMMIT_LOG="- No significant changes"
+else
+  COMMIT_LOG=$(echo "$RAW_LOG" | awk '
+    BEGIN { RS="==END==\n"; ORS="\n" }
+    NF {
+      gsub(/^\n+|\n+$/, "")
+      print "- " $0
+    }
+  ')
 fi
 
-# CHANGELOG update
 if [ "$DRY_RUN" = false ]; then
   echo "📝 Updating CHANGELOG.md"
-
-  # delete existing section for this version
   sed -i '' "/## \[v$VERSION\]/,/^## /d" CHANGELOG.md
-
   printf "\n## [v%s] - %s\n### Changes\n%s\n\n" "$VERSION" "$(date +%Y-%m-%d)" "$COMMIT_LOG" >> CHANGELOG.md
 else
   echo "🧪 Dry run complete. No changes made."
 fi
 
+if [ "$DRY_RUN" = true ]; then
+  exit 0
+fi
+
 echo "📄 Updating README.md..."
 python3 scripts/generate_readme.py > README.md
 
-# ✅ Commit + Tag + Push
 git add .
 git commit -m "chore(release): v$VERSION"
 git tag -f v$VERSION -m "Release GPT OS v$VERSION"
