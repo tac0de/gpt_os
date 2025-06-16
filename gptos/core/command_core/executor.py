@@ -6,7 +6,7 @@ from gptos.system.command_log import logger
 def execute(command, context):
     handler = PLUGIN_REGISTRY.get(command.name)
     raw_input = command.raw if hasattr(command, "raw") else str(command)
-    
+
     try:
         if handler:
             result = handler.execute(command, context)
