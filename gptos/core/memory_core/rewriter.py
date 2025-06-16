@@ -1,6 +1,8 @@
 from typing import List
 
 class MemoryRewriter:
+    def __init__(self, context):
+        self.context = context
     def deduplicate(self, entries: List[str]) -> List[str]:
         seen = set()
         result = []

@@ -1,22 +1,71 @@
+# gptos/plugins/alias_plugin.py
+
+import os
+import json
 from gptos.plugins.base import GPTOSPlugin
+from gptos.system.alias_manager import AliasManager
+from gptos.system.config_loader import get_alias_file_path
+
+ALIAS_FILE_PATH = get_alias_file_path()
 
 class AliasPlugin(GPTOSPlugin):
-    def register(self, context): pass
+    name = "alias"
+
+    def register(self, context):
+        if not hasattr(context, "alias_manager"):
+            context.alias_manager = AliasManager()
 
     def execute(self, command, context):
-        if not command.args:
-            print("Usage:")
-            print(" - alias foo=bar     (create alias)")
-            print(" - alias             (list aliases)")
+        args = command.args
+        if not args:
+            print("Usage: alias [set name=value | list | export | import]")
             return
 
-        for arg in command.args:
-            if "=" in arg:
-                alias, target = arg.split("=", 1)
-                context.alias_manager.define(alias, target)
-                print(f"Alias defined: {alias} → {target}")
+        # fallback
+        if not hasattr(context, "alias_manager"):
+            context.alias_manager = AliasManager()
+
+        manager = context.alias_manager
+        subcommand = args[0]
+
+        if subcommand == "set":
+            # join all remaining args for full value with spaces
+            raw_assignment = " ".join(args[1:])
+            if "=" in raw_assignment:
+                name, value = raw_assignment.split("=", 1)
+                manager.set_alias(name.strip(), value.strip())
+                print(f"[alias] Set: {name.strip()} → {value.strip()}")
+
+        elif subcommand == "list":
+            aliases = manager.get_all()
+            if not aliases:
+                print("[alias] No aliases defined.")
             else:
-                print("Invalid format. Use: alias foo=bar")
+                for name, val in aliases.items():
+                    print(f"{name} = {val}")
+
+        elif subcommand == "export":
+            aliases = manager.get_all()
+            try:
+                os.makedirs(os.path.dirname(ALIAS_FILE_PATH), exist_ok=True)
+                with open(ALIAS_FILE_PATH, "w", encoding="utf-8") as f:
+                    json.dump(aliases, f, indent=2)
+                print(f"[alias] Exported to {ALIAS_FILE_PATH}")
+            except Exception as e:
+                print(f"[alias] Export failed: {e}")
+
+        elif subcommand == "import":
+            try:
+                with open(ALIAS_FILE_PATH, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    for k, v in data.items():
+                        manager.set_alias(k, v)
+                print(f"[alias] Imported from {ALIAS_FILE_PATH}")
+            except Exception as e:
+                print(f"[alias] Import failed: {e}")
+
+        else:
+            print("Invalid alias command. Try: alias set ls=log search | alias list | alias export | alias import")
 
 PLUGIN_REGISTRY = {
     "alias": AliasPlugin()
