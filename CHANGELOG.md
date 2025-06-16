@@ -29,3 +29,7 @@ All notable changes to this project will be documented in this file.
 ### Changes
 db87235 chore: release v0.2
 4c7674c chore: finalize GPT OS v0.2 with logging and replay
+## [v0.3] - 2025-06-16
+### Changes
+ffadf57 feat: finalize v0.3 ethics integration
+
