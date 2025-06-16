@@ -14,26 +14,14 @@ All notable changes to this project will be documented in this file.
 - Help and status plugins
 - Architecture and README documentation
 
-## [v0.2] - 2025-06-14
+## [v0.2] – 2025-06-14
 ### Added
 - Command replay system (`replay <index>`, `replay last`)
 - Persistent command logging (`log save`, `log load`)
 - Modular `log_plugin` for log control
 - `.gptos/` hidden folder for internal state
+- Bug fixes related to command logging and singleton logger instance
 
-### Fixed
-- Bug where command logging failed due to missing `raw_input`
-- Unified `CommandLogger` to singleton instance
-
-## [v0.2] - 2025-06-14
-### Changes
-db87235 chore: release v0.2
-4c7674c chore: finalize GPT OS v0.2 with logging and replay
-## [v0.3] - 2025-06-16
-### Changes
-ffadf57 feat: finalize v0.3 ethics integration
-
-## [v0.4] - 2025-06-16
-### Changes
-- chore(release): Prepare and finalize GPT OS v0.4 release
-
+## [v0.3] – 2025-06-16
+### Added
+- Ethics integration finalized with strict mode support

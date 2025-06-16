@@ -37,7 +37,7 @@ if [ -f setup.cfg ]; then
   sed -i '' "s/^version = .*/version = $VERSION/" setup.cfg
 fi
 
-# 📜 Auto-fill CHANGELOG.md using filtered git log
+# 📜 Get all commit messages since last tag
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
 if [ -z "$LAST_TAG" ]; then
   COMMIT_LOG=$(git log --pretty=format:"- %s")
@@ -45,38 +45,34 @@ else
   COMMIT_LOG=$(git log --pretty=format:"- %s" "$LAST_TAG"..HEAD)
 fi
 
-FILTERED_LOG=$(echo "$COMMIT_LOG" | grep -vE 'jekyll|gh-pages|workflow|LICENSE|README|generate_readme')
-
-if [ -z "$FILTERED_LOG" ]; then
-  FILTERED_LOG="No significant changes"
+if [ -z "$COMMIT_LOG" ]; then
+  COMMIT_LOG="- No significant changes"
 fi
 
-COMMIT_MESSAGE="chore(release): v$VERSION
+# 📝 Update CHANGELOG.md
+if [ "$DRY_RUN" = false ]; then
+  echo "📝 Updating CHANGELOG.md"
 
-Changes:
-$FILTERED_LOG
-"
+  # Remove existing section for this version
+  sed -i '' "/## \[v$VERSION\]/,/^## /d" CHANGELOG.md
+
+  CHANGELOG_ENTRY=$'\n'"## [v$VERSION] - $(date +%Y-%m-%d)"$'\n'"### Changes"$'\n'"$COMMIT_LOG"$'\n'
+
+  echo "$CHANGELOG_ENTRY" >> CHANGELOG.md
+else
+  echo "🧪 Dry run complete. No changes made."
+fi
 
 if [ "$DRY_RUN" = true ]; then
-  echo "🧪 Dry run complete. No changes made."
   exit 0
 fi
-
-echo "📝 Updating CHANGELOG.md"
-
-# Remove any pre-existing duplicate for this version
-sed -i '' "/## \[v$VERSION\]/,/^## /d" CHANGELOG.md
-
-CHANGELOG_ENTRY=$'\n'"## [v$VERSION] - $(date +%Y-%m-%d)"$'\n'"### Changes"$'\n'"$FILTERED_LOG"$'\n'
-
-echo "$CHANGELOG_ENTRY" >> CHANGELOG.md
 
 echo "📄 Updating README.md..."
 python3 scripts/generate_readme.py > README.md
 
 # ✅ Commit + Tag + Push
 git add .
-git commit -m "$COMMIT_MESSAGE"
+git commit -m "chore(release): v$VERSION"
 git tag -f v$VERSION -m "Release GPT OS v$VERSION"
 git push origin main
 git push --force origin v$VERSION
