@@ -16,6 +16,7 @@ class SimpleRAGPipeline:
     def __init__(self):
         self.documents: List[str] = []
         self.embeddings: List[np.ndarray] = []
+        self.cache: dict[str, List[str]] = {}
 
     def embed(self, text: str) -> np.ndarray:
         # 임시: 단어 단위 길이로 벡터화 (후에 OpenAI Embedding으로 교체)
