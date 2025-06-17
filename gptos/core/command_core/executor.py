@@ -4,7 +4,6 @@ from gptos.system.plugin_loader import PLUGIN_REGISTRY
 from gptos.system.command_log import logger
 from gptos.system.ethics import ethics_guard
 from gptos.core.command_core.parser import parse_command
-from functools import lru_cache
 
 # 비동기 명령어 처리 함수
 async def execute_command_async(command, context):
@@ -40,7 +39,10 @@ async def execute_command_async(command, context):
 
     try:
         if handler:
-            result = await handler.execute(command, context)  # 비동기 실행
+            if asyncio.iscoroutinefunction(handler.execute):
+                result = await handler.execute(command, context)
+            else:
+                result = handler.execute(command, context)
         else:
             raise Exception("Unknown command")
     except Exception as e:
@@ -68,13 +70,7 @@ async def execute_command_async(command, context):
 async def execute(command, context):
     return await execute_command_async(command, context)
 
-# 캐시된 명령어 실행 (자주 호출되는 결과를 저장)
-@lru_cache(maxsize=100)
-def cached_execute_command(command_str: str, context):
-    """캐시된 명령어 실행"""
-    command = parse_command(command_str, context)
-    return execute(command, context)
-
-def execute_command(command_str: str, context):
+async def execute_command(command_str: str, context):
     """외부 인터페이스에서 호출되는 명령어 실행 (비동기 처리)"""
-    return asyncio.run(cached_execute_command(command_str, context))  # 캐시된 명령어 처리
+    command = parse_command(command_str, context)
+    return await execute(command, context)
