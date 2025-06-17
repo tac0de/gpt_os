@@ -60,3 +60,12 @@ All notable changes to this project will be documented in this file.
 - Updated  to reflect OpenAI config setup
 - Internal stability fixes for macro execution and command parsing
 
+
+## [v0.6] - 2025-06-17
+### Changes
+- Added /rag/add, /rag/reset, /rag/documents endpoints
+- Implemented SimpleRAGPipeline for basic retrieval
+- Enabled document autoload from doc/why_gpt_os_exists.md
+- Connected execute/status/rag APIs via FastAPI server
+- Confirmed command parsing, alias resolution, plugin registry working in API context
+

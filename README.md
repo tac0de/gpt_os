@@ -2,7 +2,7 @@
 
 🧠 Modular command interface powered by plugins and prompt-driven code generation.
 
-**Version**: `0.5`  **Last Updated**: 2025-06-17
+**Version**: `0.6`  **Last Updated**: 2025-06-17
 
 ---
 
