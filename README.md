@@ -23,7 +23,7 @@
 - `philosophical`
 - `reload`
 - `status`
-- `summerizer`
+- `summarizer`
 
 ---
 
