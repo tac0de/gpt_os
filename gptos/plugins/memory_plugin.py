@@ -61,13 +61,21 @@ class MemoryPlugin(GPTOSPlugin):
 
         category = args[1]
         rewriter = getattr(context, "memory_rewriter", None)
+        indexer = getattr(context, "memory_indexer", None)
 
         if not rewriter:
             print("[memory] Error: memory_rewriter not configured in context")
             return
+        if not indexer:
+            print("[memory] Error: memory_indexer not configured in context")
+            return
 
-        rewriter.deduplicate(category)
-        print(f"[memory] Deduplicated → {category}")
+        entries = indexer.get_entries(category)
+        original_len = len(entries)
+        deduped = rewriter.deduplicate(entries)
+        indexer.index[category] = deduped
+        removed = original_len - len(deduped)
+        print(f"[memory] Deduplicated → {category} (removed {removed})")
 
     def print_usage(self):
         print("Usage: memory [list|index <category> <text>|rewrite dedup <category>]")
