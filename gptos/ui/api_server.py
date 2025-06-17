@@ -86,6 +86,12 @@ async def list_rag_documents():
 # gptos/ui/api_server.py
 @app.get("/plugins")
 async def list_plugins():
+    """Return the list of plugins loaded at startup.
+
+    This public endpoint exposes the contents of ``PLUGIN_REGISTRY`` which is
+    populated when the server starts. It is useful for clients that simply
+    need to know which plugins are available without any debugging details.
+    """
     return {"plugins": list(PLUGIN_REGISTRY.keys())}
 
 
@@ -149,8 +155,13 @@ async def optimize_system():
 
 
 @app.get("/debug/plugins")
-async def list_plugins():
-    """디버깅용 플러그인 목록 조회"""
+async def list_plugins_debug():
+    """List plugins from the runtime context for debugging purposes.
+
+    Unlike ``/plugins`` which reads from the initial ``PLUGIN_REGISTRY``, this
+    endpoint reports the contents of ``context.plugins``.  Plugins added or
+    removed while the server is running will be reflected here.
+    """
     return {"plugins": list(context.plugins.keys())}
 
 # API 호출 로그 기록
