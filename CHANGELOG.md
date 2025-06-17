@@ -35,3 +35,15 @@ All notable changes to this project will be documented in this file.
 - Command logging improved with search, replay, and filters
 - Setup.cfg and release script updates for versioning and changelog automation
 
+
+## [v0.4.1] - 2025-06-17
+### Changes
+- Added config_plugin with runtime get/set/list command support
+- Enhanced context.log() to record status, duration, and plugin metadata
+- Refactored command_log to support richer CommandLogEntry structure
+- Integrated execution timing and plugin tracking in executor
+- Upgraded log_plugin with --plugin, --status, and duration-based filters
+- Added summarize_plugin: shows plugin usage stats with bar chart
+- Protected alias_plugin from multi-word alias definitions
+- Finalized 0.4.1 as the stable runtime/core enhancement release
+
