@@ -3,6 +3,7 @@
 from gptos.system.plugin_loader import PLUGIN_REGISTRY
 from gptos.system.command_log import logger
 from gptos.system.ethics import ethics_guard
+from gptos.core.command_core.parser import parse_command
 import time
 
 @ethics_guard
@@ -51,3 +52,8 @@ def execute(command, context):
     if error:
         raise error
     return result
+
+def execute_command(command_str: str, context):
+    """Used by external interfaces like API"""
+    command = parse_command(command_str, context)  # 🔁 context 전체 전달
+    return execute(command, context)

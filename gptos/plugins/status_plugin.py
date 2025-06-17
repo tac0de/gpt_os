@@ -1,21 +1,13 @@
-from gptos.plugins.base import GPTOSPlugin
-import sys
+from gptos.system.plugin_loader import PLUGIN_REGISTRY
 
-class StatusPlugin(GPTOSPlugin):
-    def register(self, context): pass
+def status_command(command, context):
+    return {
+        "status": "ok",
+        "loaded_plugins": list(context.plugins.keys()),
+        "memory_length": len(context.memory),
+        "version": "0.6.0"
+    }
 
-    def execute(self, command, context):
-        # 🔁 Dynamic import of latest plugin registry
-        plugin_loader = sys.modules.get("gptos.system.plugin_loader")
-        plugin_registry = plugin_loader.PLUGIN_REGISTRY if plugin_loader else {}
-
-        print("🧭 GPT OS STATUS")
-        print(f"Ethics Mode: {'ON ✅' if context.config.get('strict_mode') else 'OFF ❌'}")
-        print(f"Loaded Plugins: {len(plugin_registry)}")
-        print(" - " + ", ".join(sorted(plugin_registry.keys())))
-        print(f"Memory Length: {len(context.memory)}")
-
-# ✅ MUST be at global scope
 PLUGIN_REGISTRY = {
-    "status": StatusPlugin()
+    "status": type("SimplePlugin", (), {"execute": staticmethod(status_command)})()
 }
