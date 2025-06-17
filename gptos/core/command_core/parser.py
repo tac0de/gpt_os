@@ -1,5 +1,3 @@
-
-
 class Command:
     def __init__(self, name, args=None, raw_input = None):
         self.name = name

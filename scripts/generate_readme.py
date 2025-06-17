@@ -41,7 +41,37 @@ def generate_readme():
     print("gptos")
     print("```")
 
-    print("\n## 📄 License")
+    if "openai" in plugins:
+        print("\n---\n")
+        print("## 🤖 OpenAI Plugin (Optional)")
+        print("This plugin enables GPT-powered command interaction using your OpenAI API key.\n")
+
+        print("### Installation")
+        print("```bash")
+        print("pip install openai")
+        print("```")
+        print("Or if using optional dependencies:")
+        print("```bash")
+        print("pip install gptos[openai]")
+        print("```")
+
+        print("### Configuration")
+        print("```bash")
+        print("gptos >>> config set openai.api_key sk-xxxxxxxxxxxxxxxx")
+        print("```")
+        print("Or set it as an environment variable:")
+        print("```bash")
+        print("export OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx")
+        print("```")
+
+        print("### Usage")
+        print("```bash")
+        print("gptos >>> openai ask suggest a helpful tip for terminal productivity")
+        print("```")
+
+        print("> If no API key is configured, the plugin will skip execution and show a warning.\n")
+
+    print("## 📄 License")
     print("MIT License. See [LICENSE](LICENSE).\n")
 
 if __name__ == "__main__":

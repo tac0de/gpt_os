@@ -1,7 +1,7 @@
 from gptos.core.command_core.parser import parse_command
 from gptos.core.command_core.executor import execute
 from gptos.system.context_handler import SystemContext
-from gptos.plugins.reload_plugin import load_plugins
+from gptos.system.plugin_loader import load_plugins
 
 # 🔥 추가 import
 from gptos.core.memory_core.indexer import MemoryIndexer
