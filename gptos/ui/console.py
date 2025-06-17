@@ -1,3 +1,4 @@
+import asyncio
 from gptos.core.command_core.parser import parse_command
 from gptos.core.command_core.executor import execute
 from gptos.system.context_handler import SystemContext
@@ -22,7 +23,7 @@ def main():
             break
         command = parse_command(raw_input_cmd, context)
         context.log(command)
-        execute(command, context)
+        asyncio.run(execute(command, context))
 
 if __name__ == "__main__":
     main()
