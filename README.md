@@ -2,7 +2,7 @@
 
 🧠 Modular command interface powered by plugins and prompt-driven code generation.
 
-**Version**: `0.4`  **Last Updated**: 2025-06-16
+**Version**: `0.5`  **Last Updated**: 2025-06-17
 
 ---
 
@@ -16,8 +16,10 @@
 - `hello`
 - `help`
 - `log`
+- `macro`
 - `memory`
-- `openai`
+- `mode`
+- `openai_bridge`
 - `philosophical`
 - `reload`
 - `status`
@@ -32,7 +34,6 @@ cd gpt_os
 pip install -e .
 gptos
 ```
-
 ## 📄 License
 MIT License. See [LICENSE](LICENSE).
 

@@ -47,3 +47,16 @@ All notable changes to this project will be documented in this file.
 - Protected alias_plugin from multi-word alias definitions
 - Finalized 0.4.1 as the stable runtime/core enhancement release
 
+
+## [v0.5] - 2025-06-17
+### Changes
+- Introduced plugin hot-reload system via  plugin
+- Added OpenAI API integration ()
+- Implemented macro scripting support ()
+- Introduced runtime mode switching ()
+- Added summarization tools ()
+- Enhanced plugin loader for dynamic reload and debug logs
+- Verified plugin registry propagation and plugin re-initialization
+- Updated  to reflect OpenAI config setup
+- Internal stability fixes for macro execution and command parsing
+
