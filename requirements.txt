@@ -1,0 +1,15 @@
+fastapi==0.115.12
+uvicorn==0.34.3
+pydantic==2.11.7
+numpy==2.0.2
+openai==1.87.0
+httpx==0.28.1
+starlette==0.46.2
+tqdm==4.67.1
+pytest==8.4.0
+cachetools==6.1.0
+click==8.1.8
+packaging==25.0
+h11==0.16.0
+httpcore==1.0.9
+pluggy==1.6.0

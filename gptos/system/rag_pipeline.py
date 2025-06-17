@@ -22,15 +22,27 @@ class SimpleRAGPipeline:
         return np.array([len(w) for w in text.split()])
 
     def add_documents(self, docs: List[str]):
+        """문서 추가 최적화"""
         for doc in docs:
-            self.documents.append(doc)
-            self.embeddings.append(self.embed(doc))
+            # 중복 문서 추가 방지
+            if doc not in self.documents:
+                self.documents.append(doc)
+                self.embeddings.append(self.embed(doc))
 
     def retrieve(self, query: str, top_k: int = 3) -> List[str]:
+        # 캐시 확인
+        if query in self.cache:
+            return self.cache[query]
+        
         q_emb = self.embed(query)
         scores = [self.similarity(q_emb, emb) for emb in self.embeddings]
         top_indices = np.argsort(scores)[-top_k:][::-1]
-        return [self.documents[i] for i in top_indices]
+        results = [self.documents[i] for i in top_indices]
+
+        # 쿼리 결과 캐싱
+        self.cache[query] = results
+        
+        return results
 
     def run(self, query: str) -> str:
         results = self.retrieve(query)

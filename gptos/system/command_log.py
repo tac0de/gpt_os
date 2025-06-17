@@ -1,8 +1,16 @@
+import logging
 import datetime
 import json
 import os
 from typing import Optional, Any, Callable
 
+# 로깅 설정
+logger = logging.getLogger("gptos")
+logger.setLevel(logging.INFO)  # 기본적으로 INFO 레벨
+console_handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
 
 class CommandLogEntry:
     def __init__(
@@ -51,10 +59,11 @@ class CommandLogEntry:
     def __repr__(self):
         return f"<CommandLogEntry {self.timestamp} '{self.raw_input}'>"
 
-
 class CommandLogger:
     def __init__(self):
         self.entries: list[CommandLogEntry] = []
+        self.batch_interval = 10  # 배치 저장 주기 (초 단위)
+        self.last_save_time = datetime.datetime.now()
 
     def log(
         self,
@@ -70,6 +79,11 @@ class CommandLogger:
             raw_input, parsed, result, error, status, duration, plugin
         )
         self.entries.append(entry)
+        # 일정 시간 간격마다 배치 저장
+        if (datetime.datetime.now() - self.last_save_time).seconds > self.batch_interval:
+            self.save_to_file('logs/command_log.json')
+            self.last_save_time = datetime.datetime.now()
+        logger.info(f"Logged command: {raw_input}")
 
     def latest(self) -> Optional[CommandLogEntry]:
         return self.entries[-1] if self.entries else None
@@ -97,13 +111,13 @@ class CommandLogger:
     def replay(self, index: int, executor_fn: Callable[[str, dict], Any], context: dict):
         if 0 <= index < len(self.entries):
             raw_input = self.entries[index].raw_input
-            print(f"[REPLAY] #{index}: {raw_input}")
+            logger.info(f"[REPLAY] #{index}: {raw_input}")
             return executor_fn(raw_input, context)
-        print(f"[REPLAY] Invalid index: {index}")
+        logger.warning(f"[REPLAY] Invalid index: {index}")
 
     def replay_last(self, executor_fn: Callable[[str, dict], Any], context: dict):
         if not self.entries:
-            print("[REPLAY] No commands available.")
+            logger.warning("[REPLAY] No commands available.")
             return
         return self.replay(len(self.entries) - 1, executor_fn, context)
 
@@ -114,7 +128,7 @@ class CommandLogger:
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(self.export(), f, indent=2)
-        print(f"[LOG] Saved to {filepath}")
+        logger.info(f"[LOG] Saved to {filepath}")
 
     def load_from_file(self, filepath: str):
         try:
@@ -129,11 +143,11 @@ class CommandLogger:
                     )
                     for e in data
                 ]
-            print(f"[LOG] Loaded from {filepath}")
+            logger.info(f"[LOG] Loaded from {filepath}")
         except FileNotFoundError:
-            print(f"[LOG] File not found: {filepath}")
+            logger.warning(f"[LOG] File not found: {filepath}")
         except Exception as e:
-            print(f"[LOG] Failed to load: {e}")
+            logger.error(f"[LOG] Failed to load: {e}")
 
     def clear(self):
         self.entries.clear()
