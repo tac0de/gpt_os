@@ -11,6 +11,9 @@ ALIAS_FILE_PATH = get_alias_file_path()
 class AliasPlugin(GPTOSPlugin):
     name = "alias"
 
+    def __init__(self):
+        self.aliases = {}
+
     def register(self, context):
         if not hasattr(context, "alias_manager"):
             context.alias_manager = AliasManager()
@@ -18,7 +21,7 @@ class AliasPlugin(GPTOSPlugin):
     def execute(self, command, context):
         args = command.args
         if not args:
-            print("Usage: alias [set name=value | list | export | import]")
+            print("Usage: alias [set name=value | list | export | import | add <name> <target>]")
             return
 
         # fallback
@@ -64,8 +67,11 @@ class AliasPlugin(GPTOSPlugin):
             except Exception as e:
                 print(f"[alias] Import failed: {e}")
 
+        elif subcommand == "add":
+            self.handle_add(args[1:])
+
         else:
-            print("Invalid alias command. Try: alias set ls=log search | alias list | alias export | alias import")
+            print("Invalid alias command. Try: alias set ls=log search | alias list | alias export | alias import | alias add <name> <target>")
 
     def handle_add(self, args):
         if len(args) < 2:
