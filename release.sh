@@ -52,7 +52,7 @@ else
     BEGIN { RS="==END==\n"; ORS="\n" }
     NF {
       gsub(/^\n+|\n+$/, "")
-      print "- " $0
+      print "" $0
     }
   ')
 fi

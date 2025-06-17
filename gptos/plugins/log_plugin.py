@@ -43,9 +43,44 @@ class LogPlugin(GPTOSPlugin):
 
         elif subcommand == "replay" and len(args) > 1 and args[1] == "last":
             logger.replay_last(context["executor"], context)
-
+        elif subcommand == "filter":
+            filters = self.parse_filters(args[1:])
+            results = self.filter_entries(logger.entries, filters)
+            self.print_entries(results)
         else:
             print("Invalid log command. Try: log recent | log search <kw> | log filter --error | log save path | log replay 2")
+
+    def parse_filters(self, args):
+        filters = {}
+        i = 0
+        while i < len(args):
+            if args[i] == "--plugin" and i+1 < len(args):
+                filters["plugin"] = args[i+1]
+                i += 2
+            elif args[i] == "--status" and i+1 < len(args):
+                filters["status"] = args[i+1].upper()
+                i += 2
+            elif args[i] == "--min-duration" and i+1 < len(args):
+                filters["min_duration"] = float(args[i+1])
+                i += 2
+            elif args[i] == "--max-duration" and i+1 < len(args):
+                filters["max_duration"] = float(args[i+1])
+                i += 2
+            else:
+                i += 1
+        return filters
+
+    def filter_entries(self, entries: list[CommandLogEntry], filters: dict):
+        result = entries
+        if "plugin" in filters:
+            result = [e for e in result if e.plugin == filters["plugin"]]
+        if "status" in filters:
+            result = [e for e in result if e.status == filters["status"]]
+        if "min_duration" in filters:
+            result = [e for e in result if e.duration and e.duration >= filters["min_duration"]]
+        if "max_duration" in filters:
+            result = [e for e in result if e.duration and e.duration <= filters["max_duration"]]
+        return result
 
     def print_entries(self, entries: list[CommandLogEntry]):
         if not entries:
@@ -53,11 +88,9 @@ class LogPlugin(GPTOSPlugin):
             return
         for i, entry in enumerate(entries):
             ts = entry.timestamp.strftime("%H:%M:%S")
-            raw = entry.raw_input
-            if entry.error:
-                print(f"{i:02d} [{ts}] ❌ {raw} → {entry.error}")
-            else:
-                print(f"{i:02d} [{ts}] ✅ {raw}")
+            dur = f"{entry.duration:.2f}s" if entry.duration else "-"
+            status_icon = "❌" if entry.status == "ERROR" else "✅"
+            print(f"{i:02d} [{ts}] {status_icon} ({entry.plugin}) {entry.raw_input} ⏱ {dur}")
 
 PLUGIN_REGISTRY = {
     "log": LogPlugin()

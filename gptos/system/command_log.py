@@ -10,13 +10,19 @@ class CommandLogEntry:
         raw_input: str,
         parsed: Optional[dict] = None,
         result: Optional[Any] = None,
-        error: Optional[Exception] = None
+        error: Optional[Exception] = None,
+        status: Optional[str] = None,
+        duration: Optional[float] = None,
+        plugin: Optional[str] = None,
     ):
         self.timestamp: datetime.datetime = datetime.datetime.now()
-        self.raw_input: str = raw_input
-        self.parsed: Optional[dict] = parsed
-        self.result: Optional[Any] = result
-        self.error: Optional[Exception] = error
+        self.raw_input = raw_input
+        self.parsed = parsed
+        self.result = result
+        self.error = error
+        self.status = status or ("ERROR" if error else "OK")
+        self.duration = duration
+        self.plugin = plugin
 
     def to_dict(self) -> dict:
         return {
@@ -25,7 +31,22 @@ class CommandLogEntry:
             "parsed": self.parsed,
             "result": str(self.result)[:200],
             "error": str(self.error) if self.error else None,
+            "status": self.status,
+            "duration": self.duration,
+            "plugin": self.plugin,
         }
+
+    @staticmethod
+    def from_dict(data: dict) -> "CommandLogEntry":
+        return CommandLogEntry(
+            raw_input=data["raw_input"],
+            parsed=data.get("parsed"),
+            result=data.get("result"),
+            error=data.get("error"),
+            status=data.get("status"),
+            duration=data.get("duration"),
+            plugin=data.get("plugin"),
+        )
 
     def __repr__(self):
         return f"<CommandLogEntry {self.timestamp} '{self.raw_input}'>"
@@ -40,9 +61,14 @@ class CommandLogger:
         raw_input: str,
         parsed: Optional[dict] = None,
         result: Optional[Any] = None,
-        error: Optional[Exception] = None
+        error: Optional[Exception] = None,
+        status: Optional[str] = None,
+        duration: Optional[float] = None,
+        plugin: Optional[str] = None,
     ):
-        entry = CommandLogEntry(raw_input, parsed, result, error)
+        entry = CommandLogEntry(
+            raw_input, parsed, result, error, status, duration, plugin
+        )
         self.entries.append(entry)
 
     def latest(self) -> Optional[CommandLogEntry]:

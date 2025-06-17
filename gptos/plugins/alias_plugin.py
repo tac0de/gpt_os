@@ -67,6 +67,22 @@ class AliasPlugin(GPTOSPlugin):
         else:
             print("Invalid alias command. Try: alias set ls=log search | alias list | alias export | alias import")
 
+    def handle_add(self, args):
+        if len(args) < 2:
+            print("Usage: alias add <name> <target>")
+            return
+
+        alias_name = args[0]
+        target = " ".join(args[1:])
+
+        if " " in alias_name or " " in target:
+            print("[alias] ❌ Cannot alias multi-word phrases. Only single command tokens allowed.")
+            return
+
+        self.aliases[alias_name] = target
+        print(f"[alias] ✅ {alias_name} → {target}")
+
+
 PLUGIN_REGISTRY = {
     "alias": AliasPlugin()
 }
