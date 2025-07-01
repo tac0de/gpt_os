@@ -154,4 +154,4 @@ class CommandLogger:
         self.entries.clear()
 
 # Singleton instance
-logger = CommandLogger()
+command_logger = CommandLogger()

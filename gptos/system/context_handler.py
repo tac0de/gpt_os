@@ -1,6 +1,6 @@
 import os
 from gptos.system.alias_manager import AliasManager
-from gptos.system.command_log import logger
+from gptos.system.command_log import command_logger
 from gptos.system.rag_pipeline import SimpleRAGPipeline, load_default_rag_docs
 import gc
 
@@ -14,7 +14,7 @@ class SystemContext:
             "summarize.recent_count": 10,
         }
         self.alias_manager = AliasManager()
-        self.logger = logger  # Optional, in case access needed
+        self.logger = command_logger  # Optional, in case access needed
         self.rag_pipeline = SimpleRAGPipeline()
         self.rag_pipeline.add_documents([
             "GPT OS is a modular system for language interface research.",
