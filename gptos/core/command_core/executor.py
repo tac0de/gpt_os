@@ -1,7 +1,7 @@
 import asyncio
 import time
 from gptos.system.plugin_loader import PLUGIN_REGISTRY
-from gptos.system.command_log import logger
+from gptos.system.command_log import logger, command_logger
 from gptos.system.ethics import ethics_guard
 from gptos.core.command_core.parser import parse_command
 
@@ -51,7 +51,7 @@ async def execute_command_async(command, context):
         logger.error(f"Error executing {command.name}: {e}")
     finally:
         duration = round(time.time() - start_time, 4)
-        logger.log(
+        command_logger.log(
             raw_input=raw_input,
             parsed=vars(command),
             result=result,

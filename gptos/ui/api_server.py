@@ -10,7 +10,7 @@ from gptos.system.command_log import logger
 import time
 import cachetools
 
-app = FastAPI(title="GPT OS API", version="0.6.1")
+app = FastAPI(title="GPT OS API", version="0.6.2")
 # === Rate Limiting Cache ===
 rate_limit_cache = cachetools.TTLCache(maxsize=1000, ttl=60)  # TTL 60초, 최대 1000개 키 저장
 
@@ -48,7 +48,7 @@ async def get_status():
         "status": "ok",
         "loaded_plugins": list(context.plugins.keys()),
         "memory_length": len(context.memory),
-        "version": "0.6.0"
+        "version": "0.6.2"
     }
 
 @app.post("/execute")
@@ -143,7 +143,7 @@ async def get_system_status():
         "status": "ok",
         "loaded_plugins": len(context.plugins),
         "memory_length": len(context.memory),
-        "version": "0.6.0"
+        "version": "0.6.2"
     }
 
 @app.get("/system/optimize")
