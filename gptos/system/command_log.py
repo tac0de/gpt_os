@@ -4,13 +4,14 @@ import json
 import os
 from typing import Optional, Any, Callable
 
-# 로깅 설정
 logger = logging.getLogger("gptos")
-logger.setLevel(logging.INFO)  # 기본적으로 INFO 레벨
+logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
+
+print(f"{logger.info}")
 
 class CommandLogEntry:
     def __init__(

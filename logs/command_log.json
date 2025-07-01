@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-07-01T09:47:51.422302",
+    "raw_input": "ethics",
+    "parsed": null,
+    "result": "None",
+    "error": null,
+    "status": "OK",
+    "duration": null,
+    "plugin": null
+  }
+]
