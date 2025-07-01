@@ -1,7 +1,7 @@
 # gptos/plugins/log_plugin.py
 
 from gptos.plugins.base import GPTOSPlugin
-from gptos.system.command_log import logger, CommandLogEntry
+from gptos.system.command_log import command_logger, CommandLogEntry
 
 class LogPlugin(GPTOSPlugin):
     name = "log"
@@ -19,33 +19,33 @@ class LogPlugin(GPTOSPlugin):
 
         if subcommand == "recent":
             limit = int(args[1]) if len(args) > 1 and args[1].isdigit() else 10
-            entries = logger.entries[-limit:]
+            entries = command_logger.entries[-limit:]
             self.print_entries(entries)
 
         elif subcommand == "search" and len(args) > 1:
             keyword = " ".join(args[1:])
-            results = [e for e in logger.entries if keyword.lower() in e.raw_input.lower()]
+            results = [e for e in command_logger.entries if keyword.lower() in e.raw_input.lower()]
             self.print_entries(results)
 
         elif subcommand == "filter" and "--error" in args:
-            errors = [e for e in logger.entries if e.error]
+            errors = [e for e in command_logger.entries if e.error]
             self.print_entries(errors)
 
         elif subcommand == "save" and len(args) > 1:
-            logger.save_to_file(args[1])
+            command_logger.save_to_file(args[1])
 
         elif subcommand == "load" and len(args) > 1:
-            logger.load_from_file(args[1])
+            command_logger.load_from_file(args[1])
 
         elif subcommand == "replay" and len(args) > 1 and args[1].isdigit():
             index = int(args[1])
-            logger.replay(index, context["executor"], context)
+            command_logger.replay(index, context["executor"], context)
 
         elif subcommand == "replay" and len(args) > 1 and args[1] == "last":
-            logger.replay_last(context["executor"], context)
+            command_logger.replay_last(context["executor"], context)
         elif subcommand == "filter":
             filters = self.parse_filters(args[1:])
-            results = self.filter_entries(logger.entries, filters)
+            results = self.filter_entries(command_logger.entries, filters)
             self.print_entries(results)
         else:
             print("Invalid log command. Try: log recent | log search <kw> | log filter --error | log save path | log replay 2")

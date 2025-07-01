@@ -1,6 +1,6 @@
 from gptos.plugins.base import GPTOSPlugin
 import sys
-from gptos.system.command_log import logger  # 🔁 use shared instance
+from gptos.system.command_log import command_logger  # 🔁 use shared instance
 from gptos.system.executor_wrapper import executor_fn
 
 class DevtoolsPlugin(GPTOSPlugin):
@@ -50,20 +50,20 @@ class DevtoolsPlugin(GPTOSPlugin):
             target = command.args[1]
 
             if target == "last" or target == "-1":
-                logger.replay_last(executor_fn, context)
+                command_logger.replay_last(executor_fn, context)
             else:
                 try:
                     index = int(target)
-                    logger.replay(index, executor_fn, context)
+                    command_logger.replay(index, executor_fn, context)
                 except ValueError:
                     print("Usage: dev replay <index|last|-1>")
             return
 
         elif sub == "log":
-            if not logger.entries:
+            if not command_logger.entries:
                 print("[log] No entries yet.")
             else:
-                for i, entry in enumerate(logger.entries):
+                for i, entry in enumerate(command_logger.entries):
                     print(f"[{i}] {entry.raw_input}")
             return
 

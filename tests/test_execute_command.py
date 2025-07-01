@@ -1,5 +1,6 @@
 from io import StringIO
 import sys
+import asyncio
 from contextlib import redirect_stdout
 from pathlib import Path
 
@@ -37,7 +38,7 @@ def test_execute_hello_command():
 
     buf = StringIO()
     with redirect_stdout(buf):
-        executor.execute_command('hello', ctx)
+        asyncio.run(executor.execute_command('hello', ctx))
     output = buf.getvalue()
     assert 'Hello, GPT OS!' in output
 

@@ -77,4 +77,5 @@ All notable changes to this project will be documented in this file.
 - Enhanced system context: Added automatic memory cleanup and optimized state management
 - Applied rate limiting and cache to /execute and /rag endpoints for better API performance
 - Updated requirements.txt: Removed unnecessary packages (altgraph, future, macholib)
+- Fixed CommandLogger name clash causing AttributeError during execution
 

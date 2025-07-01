@@ -1,5 +1,5 @@
 from gptos.plugins.base import GPTOSPlugin
-from gptos.system.command_log import logger, CommandLogEntry
+from gptos.system.command_log import command_logger, CommandLogEntry
 from collections import defaultdict
 
 class SummarizePlugin(GPTOSPlugin):
@@ -16,7 +16,7 @@ class SummarizePlugin(GPTOSPlugin):
 
         subcommand = args[0]
         if subcommand == "usage":
-            self.summarize_plugin_usage(logger.entries)
+            self.summarize_plugin_usage(command_logger.entries)
 
     def summarize_plugin_usage(self, entries: list[CommandLogEntry]):
         stats = defaultdict(lambda: {
